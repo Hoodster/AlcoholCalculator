@@ -21,17 +21,20 @@ LRESULT CALLBACK WndProc(HWND hWsnd, UINT message, WPARAM wParam, LPARAM lParam)
 WNDCLASSEXW SetWindowOptions(HINSTANCE hInstance, LPCWSTR className);
 void DefineFirstWindowControls(HWND hWnd, HINSTANCE hInstance);
 void DefineSecondWindowControls(HWND hWnd, HINSTANCE hInstance);
+void DefineThirdWindowControls(HWND hWnd, HINSTANCE hInstance);
 HWND CreateControl(LPCWSTR type, LPCWSTR text, DWORD styles, int x, int y, int width, int height, HWND hWnd, HINSTANCE hInstance, int id = NULL);
 HWND CreateNewWindow(LPCWSTR className, HINSTANCE hInstance, LPCWSTR windowName);
 
 static TCHAR MainWindow[] = _T("MainWindow");
 static TCHAR AlcoholWindow[] = _T("AlcoholWindow");
+static TCHAR TimeWindow[] = _T("ConsuptionWindow");
 
 static TCHAR AppName[] = _T("Alcohol calculator");
 static TCHAR AlcoholMeasuresName[] = _T("Podaj iloœæ alkoholu");
 static TCHAR AlcoholTime[] = _T("Podaj czas spo¿ycia");
 
 HWND secondWindow;
+HWND thirdWindow;
 int _nCmdShow;
 
 int CALLBACK WinMain(
@@ -65,15 +68,21 @@ int CALLBACK WinMain(
         return 1;
     }
 
-   MSG message;
+    thirdWindow = CreateNewWindow(TimeWindow, hInstance, AlcoholTime);
+    DefineThirdWindowControls(thirdWindow, hInstance);
+    if (!thirdWindow) {
+        return 1;
+    }
 
-   while (GetMessage(&message, nullptr, 0, 0))
-   {
+    MSG message;
+
+    while (GetMessage(&message, nullptr, 0, 0))
+    {
        TranslateMessage(&message);
        DispatchMessage(&message);
-   }
+    }
 
-   return (int)message.wParam;
+    return (int)message.wParam;
 }
 
 void DefineFirstWindowControls(HWND hWnd, HINSTANCE hInstance) {

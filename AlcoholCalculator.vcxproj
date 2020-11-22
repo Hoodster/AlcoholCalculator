@@ -140,6 +140,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AlcoholCalculator.cpp" />
+    <ClCompile Include="Controls.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Controls.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

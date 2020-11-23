@@ -40,7 +40,7 @@ double ACCalc::CalculateAlcoholConcentration(
 	return (generalAlcoholCapacity - alcoholGramsLost) / bodyFluidsWeight;
 }
 
-int CalculateBMIFluidWeight(int weight, int height) {
+int ACCalc::CalculateBMIFluidWeight(int weight, int height) {
 	double percentageOfBodyFluids;
 
 	double BMI = weight / (height / 100) ^ 2;
@@ -53,7 +53,7 @@ int CalculateBMIFluidWeight(int weight, int height) {
 	}
 }
 
-int CalculateAlcoholLossOverTime(int startHour, int endHour, int gramsPerHour) {
+int ACCalc::CalculateAlcoholLossOverTime(int startHour, int endHour, int gramsPerHour) {
 	int timeDifference = endHour - startHour;
 	return gramsPerHour * timeDifference;
 }

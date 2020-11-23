@@ -12,9 +12,9 @@ LRESULT CALLBACK WndProc(HWND hWsnd, UINT message, WPARAM wParam, LPARAM lParam)
 WNDCLASSEXW SetWindowOptions(HINSTANCE hInstance, LPCWSTR className);
 HWND CreateNewWindow(LPCWSTR className, HINSTANCE hInstance, LPCWSTR windowName);
 
-static TCHAR MainWindowTitle[] = _T("MainWindow");
-static TCHAR AlcoholWindow[] = _T("AlcoholWindow");
-static TCHAR TimeWindow[] = _T("ConsuptionWindow");
+static TCHAR MainWindowClass[] = _T("MainWindow");
+static TCHAR AlcoholWindowClass[] = _T("AlcoholWindow");
+static TCHAR TimeWindowClass[] = _T("ConsuptionWindow");
 
 static TCHAR AppName[] = _T("Alcohol calculator");
 static TCHAR AlcoholMeasuresName[] = _T("Podaj iloœæ alkoholu");
@@ -56,7 +56,7 @@ int CALLBACK WinMain(
         return 0;
     }
 
-    HWND firstWindow = CreateNewWindow(MainWindowTitle, hInstance, AppName);
+    HWND firstWindow = CreateNewWindow(MainWindowClass, hInstance, AppName);
 
     if (!firstWindow) {
        return 1;
@@ -67,13 +67,13 @@ int CALLBACK WinMain(
     ShowWindow(firstWindow, nCmdShow);
     UpdateWindow(firstWindow);
 
-    secondWindow = CreateNewWindow(AlcoholWindow, hInstance, AlcoholMeasuresName);
+    secondWindow = CreateNewWindow(AlcoholWindowClass, hInstance, AlcoholMeasuresName);
     alcoholTypes.DefineAlcoholTypesWindowControls(secondWindow, hInstance);
     if (!secondWindow) {
         return 1;
     }
 
-    thirdWindow = CreateNewWindow(TimeWindow, hInstance, AlcoholTime);
+    thirdWindow = CreateNewWindow(TimeWindowClass, hInstance, AlcoholTime);
     consumptionTime.DefineConsumptionTimeWindowControls(thirdWindow, hInstance);
     if (!thirdWindow) {
         return 1;

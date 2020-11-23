@@ -21,6 +21,7 @@ static TCHAR AlcoholTime[] = _T("Podaj czas spo¿ycia");
 
 struct model {
     bool sex;
+    int age;
     int weight;
     int height;
     int beer;
@@ -43,7 +44,7 @@ int CALLBACK WinMain(
 ) {
     _nCmdShow = nCmdShow;
 
-    int ageLimitationState = MessageBox(NULL, _T("Program dla osób pe³noletnich"), _T("Ostrze¿enie"), NULL);
+    int ageLimitationState = MessageBox(NULL, _T("Program dla osób pe³noletnich"), _T("Ostrze¿enie"), MB_ICONWARNING);
 
     if (ageLimitationState != IDOK) {
         return 0;
@@ -206,11 +207,38 @@ LRESULT CALLBACK WndProc(
                 case ID_CONFIRM3:
                     MessageBox(NULL, _T("Wyst¹pi³ b³¹d inicjalizacji"), _T("B³¹d"), NULL);
                     break;
+                case ID_SEXMALE:
+                case ID_SEXFEMALE:
+                    break;
+                case ID_AGE:
+                    data.age = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_AGE));
+                    break;
+                case ID_WEIGHT:
+                    data.age = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_AGE));
+                    break;
+                case ID_HEIGHT:
+                    data.age = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_AGE));
+                    break;
+                case ID_BEER:
+                    data.age = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_AGE));
+                    break;
+                case ID_VODKA:
+                    data.age = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_AGE));
+                    break;
+                case ID_WINE:
+                    data.age = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_AGE));
+                    break;
+                case ID_STARTDRINK:
+                    data.age = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_AGE));
+                    break;
+                case ID_ENDDRINK:
+                    data.age = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_AGE));
+                    break;
                 default:
                     break;
             }
         case WM_CLOSE:
-            DestroyWindow(hWnd);
+           // DestroyWindow(hWnd);
             break;
         case WM_DESTROY:
             //PostQuitMessage(12432);

@@ -18,5 +18,6 @@ class Controls
 {
 	public:
 		HWND CreateControl(LPCWSTR type, LPCWSTR text, DWORD styles, int x, int y, int width, int height, HWND hWnd, HINSTANCE hInstance, int id = NULL);
+		int GetNumberFromTextbox(HWND control);
 };
 

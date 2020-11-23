@@ -2,7 +2,7 @@
 class ACCalc
 {
 	public:
-		int CalculateAlcoholConcentration(
+		double CalculateAlcoholConcentration(
 			bool isMale, 
 			int age,
 			int weight,

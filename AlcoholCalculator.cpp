@@ -56,6 +56,10 @@ int CALLBACK WinMain(
        return 1;
     }
 
+    HWND ageTextBox = controls.CreateControl(_T("EDIT"), NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, 175, 100, 150, 20,
+        firstWindow, hInstance, ID_AGE);
+    data.age = controls.GetNumberFromTextbox(GetDlgItem(firstWindow, ID_AGE));
+
     DefineFirstWindowControls(firstWindow, hInstance);
     
     ShowWindow(firstWindow, nCmdShow);
@@ -94,8 +98,7 @@ void DefineFirstWindowControls(HWND hWnd, HINSTANCE hInstance) {
 
     HWND ageLabel = controls.CreateControl(_T("STATIC"), _T("Wiek [lata]"), WS_CHILD | WS_VISIBLE, 75, 100, 150, 20,
         hWnd, hInstance);
-    HWND ageTextBox = controls.CreateControl(_T("EDIT"), NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, 175, 100, 150, 20,
-        hWnd, hInstance, ID_AGE);
+
     
     HWND weightLabel = controls.CreateControl(_T("STATIC"), _T("Waga [kg]"), WS_CHILD | WS_VISIBLE, 75, 150, 150, 20,
         hWnd, hInstance);

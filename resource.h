@@ -1,7 +1,3 @@
-//{{NO_DEPENDENCIES}}
-// Plik do³¹czany wygenerowany przez œrodowisko Microsoft Visual C++.
-// U¿ywany przez: AlcoholCalculator.rc
-//
 #define IDB_BEER                        201
 #define IDB_VODKA                       202
 #define IDB_WINE                        203

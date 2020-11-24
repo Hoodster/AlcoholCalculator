@@ -2,37 +2,47 @@
 #include <tchar.h>
 #include <string.h>
 #include <stdlib.h>
-
-#define ID_SEXMALE 101
-#define ID_SEXFEMALE 102
-#define ID_AGE 103
-#define ID_WEIGHT 104
-#define ID_HEIGHT 105
-#define ID_CONFIRM1 106
-#define ID_BEER 107
-#define ID_VODKA 108
-#define ID_WINE 109
-#define ID_CONFIRM2 110
-#define ID_STARTDRINK 111
-#define ID_ENDDRINK 112
-#define ID_CONFIRM3 113
+#include "Controls.h"
+#include "ACCalc.h"
+#include "MainWindow.h"
+#include "AlcoholTypesWindow.h"
+#include "ConsumptionTime.h"
+#include <cstring>
+#include <sstream>
 
 LRESULT CALLBACK WndProc(HWND hWsnd, UINT message, WPARAM wParam, LPARAM lParam);
 WNDCLASSEXW SetWindowOptions(HINSTANCE hInstance, LPCWSTR className);
-void DefineFirstWindowControls(HWND hWnd, HINSTANCE hInstance);
-void DefineSecondWindowControls(HWND hWnd, HINSTANCE hInstance);
-HWND CreateControl(LPCWSTR type, LPCWSTR text, DWORD styles, int x, int y, int width, int height, HWND hWnd, HINSTANCE hInstance, int id = NULL);
 HWND CreateNewWindow(LPCWSTR className, HINSTANCE hInstance, LPCWSTR windowName);
 
-static TCHAR MainWindow[] = _T("MainWindow");
-static TCHAR AlcoholWindow[] = _T("AlcoholWindow");
+static TCHAR MainWindowClass[] = _T("MainWindow");
+static TCHAR AlcoholWindowClass[] = _T("AlcoholWindow");
+static TCHAR TimeWindowClass[] = _T("ConsuptionWindow");
 
 static TCHAR AppName[] = _T("Alcohol calculator");
 static TCHAR AlcoholMeasuresName[] = _T("Podaj iloœæ alkoholu");
 static TCHAR AlcoholTime[] = _T("Podaj czas spo¿ycia");
 
+struct model {
+    bool sex;
+    int weight;
+    int height;
+    int beer;
+    int wine;
+    int vodka;
+    int startHour;
+    int endHour;
+} data;
+
+HWND firstWindow;
 HWND secondWindow;
+HWND thirdWindow;
 int _nCmdShow;
+
+MainWindow mainWindow;
+AlcoholTypesWindow alcoholTypes;
+ConsumptionTime consumptionTime;
+Controls controls;
+ACCalc ac;
 
 int CALLBACK WinMain(
 	HINSTANCE hInstance,
@@ -42,98 +52,44 @@ int CALLBACK WinMain(
 ) {
     _nCmdShow = nCmdShow;
 
-    int ageLimitationState = MessageBox(NULL, _T("Program dla osób pe³noletnich"), _T("Ostrze¿enie"), NULL);
+    int ageLimitationState = MessageBox(NULL, _T("Program dla osób pe³noletnich"), _T("Ostrze¿enie"), MB_ICONWARNING);
 
     if (ageLimitationState != IDOK) {
         return 0;
     }
 
-    HWND firstWindow = CreateNewWindow(MainWindow, hInstance, AppName);
+    firstWindow = CreateNewWindow(MainWindowClass, hInstance, AppName);
 
     if (!firstWindow) {
        return 1;
     }
 
-    DefineFirstWindowControls(firstWindow, hInstance);
+    mainWindow.DefineMainWindowControls(firstWindow, hInstance);
     
     ShowWindow(firstWindow, nCmdShow);
     UpdateWindow(firstWindow);
 
-    secondWindow = CreateNewWindow(AlcoholWindow, hInstance, AlcoholMeasuresName);
-    DefineSecondWindowControls(secondWindow, hInstance);
+    secondWindow = CreateNewWindow(AlcoholWindowClass, hInstance, AlcoholMeasuresName);
+    alcoholTypes.DefineAlcoholTypesWindowControls(secondWindow, hInstance);
     if (!secondWindow) {
         return 1;
     }
 
-   MSG message;
+    thirdWindow = CreateNewWindow(TimeWindowClass, hInstance, AlcoholTime);
+    consumptionTime.DefineConsumptionTimeWindowControls(thirdWindow, hInstance);
+    if (!thirdWindow) {
+        return 1;
+    }
 
-   while (GetMessage(&message, nullptr, 0, 0))
-   {
+    MSG message;
+
+    while (GetMessage(&message, nullptr, 0, 0))
+    {
        TranslateMessage(&message);
        DispatchMessage(&message);
-   }
+    }
 
-   return (int)message.wParam;
-}
-
-void DefineFirstWindowControls(HWND hWnd, HINSTANCE hInstance) {
-    HWND sexLabel = CreateControl(_T("STATIC"), _T("Podaj p³eæ"), WS_CHILD | WS_VISIBLE, 30, 50, 150, 20, hWnd, hInstance);
-
-    HWND maleRadio = CreateControl(_T("BUTTON"), _T("Mê¿czyzna"), WS_VISIBLE | WS_CHILD | BS_AUTORADIOBUTTON | WS_GROUP,
-        150, 50, 100, 20, hWnd, hInstance, ID_SEXMALE);
-    HWND femaleRadio = CreateControl(_T("BUTTON"), _T("Kobieta"), WS_VISIBLE | WS_CHILD | BS_AUTORADIOBUTTON,
-        250, 50, 100, 20, hWnd, hInstance, ID_SEXFEMALE);
-
-    HWND ageLabel = CreateControl(_T("STATIC"), _T("Wiek [lata]"), WS_CHILD | WS_VISIBLE, 75, 100, 150, 20,
-        hWnd, hInstance);
-    HWND ageTextBox = CreateControl(_T("EDIT"), NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, 175, 100, 150, 20,
-        hWnd, hInstance, ID_AGE);
-    
-    HWND weightLabel = CreateControl(_T("STATIC"), _T("Waga [kg]"), WS_CHILD | WS_VISIBLE, 75, 150, 150, 20,
-        hWnd, hInstance);
-    HWND weightTextBox = CreateControl(_T("EDIT"), NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, 175, 150, 150, 20,
-        hWnd, hInstance, ID_WEIGHT);
-
-    HWND heightLabel = CreateControl(_T("STATIC"), _T("Wzrost [cm]"), WS_CHILD | WS_VISIBLE, 75, 200, 150, 20,
-        hWnd, hInstance);
-    HWND heightTextBox = CreateControl(_T("EDIT"), NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, 175, 200, 150, 20,
-        hWnd, hInstance, ID_HEIGHT);
-
-    HWND confirmButton = CreateControl(_T("BUTTON"), _T("Dalej"), WS_CHILD | WS_VISIBLE | WS_BORDER, 125, 250, 150, 20,
-        hWnd, hInstance, ID_CONFIRM1);
-}
-
-void DefineSecondWindowControls(HWND hWnd, HINSTANCE hInstance) {
-
-    HWND beerLabel = CreateControl(_T("STATIC"), _T("Piwo (500ml) 5% [ml]"), WS_CHILD | WS_VISIBLE, 105, 50, 150, 20,
-        hWnd, hInstance);
-    HWND beerTextBox = CreateControl(_T("EDIT"), NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, 270, 50, 50, 20,
-        hWnd, hInstance, ID_BEER);
-
-    HWND vodkatLabel = CreateControl(_T("STATIC"), _T("Wódka (40ml) 40% [ml]"), WS_CHILD | WS_VISIBLE, 105, 100, 150, 20,
-        hWnd, hInstance);
-    HWND vodkaTextBox = CreateControl(_T("EDIT"), NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, 270, 100, 50, 20,
-        hWnd, hInstance, ID_VODKA);
-
-    HWND wineLabel = CreateControl(_T("STATIC"), _T("Wino (100ml) 11% [ml]"), WS_CHILD | WS_VISIBLE, 105, 150, 150, 20,
-        hWnd, hInstance);
-    HWND wineTextBox = CreateControl(_T("EDIT"), NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, 270, 150, 50, 20,
-        hWnd, hInstance, ID_WINE);
-
-    HWND confirmButton = CreateControl(_T("BUTTON"), _T("Dalej"), WS_CHILD | WS_VISIBLE | WS_BORDER, 105, 250, 150, 20,
-        hWnd, hInstance, ID_CONFIRM1);
-}
-
-void DefineThirdWindowControls(HWND hWnd, HINSTANCE hInstance) {
-    HWND drinkStartLabel = CreateControl(_T("STATIC"), _T("Zacz¹³em/am piæ o [hh]"), WS_CHILD | WS_VISIBLE, 105, 50, 150, 20,
-        hWnd, hInstance);
-    HWND drinkStartTextBox = CreateControl(_T("EDIT"), NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, 270, 50, 50, 20,
-        hWnd, hInstance, ID_BEER);
-
-    HWND drinkEndLabel = CreateControl(_T("STATIC"), _T("Skoñczy³em/am piæ o [hh]"), WS_CHILD | WS_VISIBLE, 105, 100, 150, 20,
-        hWnd, hInstance);
-    HWND drinkEndTextBox = CreateControl(_T("EDIT"), NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, 270, 100, 50, 20,
-        hWnd, hInstance, ID_VODKA);
+    return (int)message.wParam;
 }
 
 HWND CreateNewWindow(LPCWSTR className, HINSTANCE hInstance, LPCWSTR windowName) {
@@ -155,10 +111,6 @@ HWND CreateNewWindow(LPCWSTR className, HINSTANCE hInstance, LPCWSTR windowName)
         hInstance,
         NULL
     );
-}
-
-HWND CreateControl(LPCWSTR type, LPCWSTR text, DWORD styles, int x, int y, int width, int height, HWND hWnd, HINSTANCE hInstance, int id) {
-    return CreateWindowEx(0, type, text, styles, x, y, width, height, hWnd, (HMENU) id, hInstance, NULL);
 }
 
 WNDCLASSEXW SetWindowOptions(HINSTANCE hInstance, LPCWSTR className) {
@@ -187,28 +139,59 @@ LRESULT CALLBACK WndProc(
 	LPARAM lParam
 ) {
     switch (message) {
-        case WM_COMMAND:
-            switch (wParam) {
-                case ID_CONFIRM1:
-                    ShowWindow(secondWindow, _nCmdShow);
-                    UpdateWindow(secondWindow);
-                    break;
-                case ID_CONFIRM2:
-                    break;
-                case ID_CONFIRM3:
-                    break;
-                default:
-                    break;
-            }
         case WM_CLOSE:
-            DestroyWindow(hWnd);
+            PostQuitMessage(0);
             break;
         case WM_DESTROY:
-            //PostQuitMessage(12432);
+            DestroyWindow(hWnd);
             break;
         case WM_CTLCOLORSTATIC:
             SetBkMode((HDC)wParam, TRANSPARENT);
             return (LRESULT)GetStockObject(LTGRAY_BRUSH);
+            break;
+        case WM_COMMAND:
+            switch (wParam) {
+                case ID_CONFIRM1:
+                    data.sex = controls.GetOptionsFromRadioButtonGroup(hWnd, ID_SEXMALE, ID_SEXFEMALE);
+                    data.weight = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_WEIGHT));
+                    data.height = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_HEIGHT));
+                    ShowWindow(secondWindow, _nCmdShow);
+                    UpdateWindow(secondWindow);
+                    DestroyWindow(firstWindow);
+                    break;
+                case ID_CONFIRM2:
+                    data.beer = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_BEER));
+                    data.vodka = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_VODKA));
+                    data.wine = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_WINE));
+                    ShowWindow(thirdWindow, _nCmdShow);
+                    UpdateWindow(thirdWindow);
+                    DestroyWindow(secondWindow);
+                    break;
+                case ID_CONFIRM3:
+                    data.startHour = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_STARTDRINK));
+                    data.endHour = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_ENDDRINK));
+                    double alcoholAmount = ac.CalculateAlcoholConcentration(
+                        data.sex,
+                        data.weight,
+                        data.height,
+                        data.beer,
+                        data.vodka,
+                        data.wine,
+                        data.startHour,
+                        data.endHour
+                    );
+
+                    std::ostringstream messageText;
+                    messageText << "Posiadasz " << alcoholAmount << " promila alkoholu we krwi.";
+                    std::string messageTextString = messageText.str();
+                    std::wstring stemp = std::wstring(messageTextString.begin(), messageTextString.end());
+                    LPCWSTR result = stemp.c_str();
+                    int resultMessageBox = MessageBox(hWnd, result, _T("Wynik"), NULL);
+                    if (resultMessageBox) {
+                        PostQuitMessage(0);
+                    }
+                    break;
+            }
             break;
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);

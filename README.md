@@ -137,12 +137,14 @@ Obsługa komendy interakcji z przyciskiem posiadającym ID `ID_CONFIRM1` otwiera
         case WM_COMMAND:
             switch (wParam) {
                 case ID_CONFIRM1:
+                    data.sex = controls.GetOptionsFromRadioButtonGroup(hWnd, ID_SEXMALE, ID_SEXFEMALE); // pobieranie wybranego buttona z radio buttonów
+                    data.weight = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_WEIGHT)); // pobieranie danych z kontrolki wagi 
                     ShowWindow(secondWindow, _nCmdShow);
                     UpdateWindow(secondWindow);
                     break;
 ```
 ```
-        case WM_CTLCOLORSTATIC: // ustawienie "przeźroczystego" tła dla kontrolek
+        case WM_CTLCOLORSTATIC: // ustawienie "przezroczystego" tła dla kontrolek
             SetBkMode((HDC)wParam, TRANSPARENT); // kolor boxa wychodzącego poza kontrolkę
             return (LRESULT)GetStockObject(LTGRAY_BRUSH); //tło samej kontrolki (bez tego tekst miałby białe tło mimo linijki wyżej
             break;
@@ -172,6 +174,21 @@ int Controls::GetNumberFromTextbox(HWND control) {
 }
 ```
 
+### (.cpp) GetOptionsFromRadioButtonGroup - Determinujemy który radio button jest kliknięty. Ustalamy pozytywny scenariusz dla którego zwrócimy 1 (true) i negatywny dla którego zwrócimy 0 (false)
+```
+bool Controls::GetOptionsFromRadioButtonGroup(HWND window, int positiveOption, int negativeOption)
+{
+    if (IsDlgButtonChecked(window, positiveOption)) // sprawdzanie czy przycisk o danym ID ma stan "checked"
+    {
+        return true;
+    }
+    else if (IsDlgButtonChecked(window, negativeOption)) 
+    {
+        return false;
+    }
+}
+```
+
 ### (.h) Zdefiniowanie id wszystkich kontrolek
 ```
 #define ID_VODKA 108
@@ -189,7 +206,7 @@ Raczej nie będę się rozpisywał. To są typowo matematyczne funkcje, nie ma n
 
 ### (.cpp) CalculateBMIFluidWeight - funkcja pomocnicza licząca dodatkową/ujemną wagę płynów w zależności od BMI
 
-### (.cpp) CalculateAlcoholLossOverTime - funkcja pomocnicza licząca gramy alkoholu do odjęcia po upłynięciu zdefiniowanego czasu
+### (.cpp) CalculateAlcoholFillOverTime - funkcja pomocnicza licząca przypływ gramów alkoholu do krwi w czasie.
 
 ## MainWindow.cpp/.h - definiowanie okna (przykładowe pliki, reszta adekwatna)
 

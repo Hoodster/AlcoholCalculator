@@ -1,8 +1,5 @@
 #include "AlcoholTypesWindow.h"
-#include "Controls.h"
 #include <tchar.h>
-
-Controls controls;
 
 void AlcoholTypesWindow::DefineAlcoholTypesWindowControls(HWND hWnd, HINSTANCE hInstance) {
 

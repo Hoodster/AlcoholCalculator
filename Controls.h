@@ -1,7 +1,6 @@
 #include <Windows.h>
 #define ID_SEXMALE 101
 #define ID_SEXFEMALE 102
-#define ID_AGE 103
 #define ID_WEIGHT 104
 #define ID_HEIGHT 105
 #define ID_CONFIRM1 106
@@ -19,5 +18,6 @@ class Controls
 	public:
 		HWND CreateControl(LPCWSTR type, LPCWSTR text, DWORD styles, int x, int y, int width, int height, HWND hWnd, HINSTANCE hInstance, int id = NULL);
 		int GetNumberFromTextbox(HWND control);
+		bool GetOptionsFromRadioButtonGroup(HWND window, int positiveOption, int negativeOption);
 };
 

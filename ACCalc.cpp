@@ -2,7 +2,6 @@
 
 double ACCalc::CalculateAlcoholConcentration(
 	bool isMale,
-	int age,
 	int weight,
 	int height,
 	int beerAmount,
@@ -23,21 +22,17 @@ double ACCalc::CalculateAlcoholConcentration(
 	double percentageOfBodyFluids;
 	double BMIAdditionalWeight = CalculateBMIFluidWeight(weight, height);
 
-	int negativeGramsPerHour;
-
 	if (isMale) {
-		negativeGramsPerHour = 11;
 		percentageOfBodyFluids = 0.7;
 	}
 	else {
-		negativeGramsPerHour = 9;
 		percentageOfBodyFluids = 0.6;
 	}
 
-	int alcoholGramsLost = CalculateAlcoholLossOverTime(startHour, endHour, negativeGramsPerHour);
+	int alcoholCapacityOverTime = CalculateAlcoholFillOverTime(startHour, endHour, generalAlcoholCapacity);
 	double bodyFluidsWeight = percentageOfBodyFluids * weight + BMIAdditionalWeight * 0.15;
 
-	return (generalAlcoholCapacity - alcoholGramsLost) / bodyFluidsWeight;
+	return alcoholCapacityOverTime / bodyFluidsWeight;
 }
 
 int ACCalc::CalculateBMIFluidWeight(int weight, int height) {
@@ -53,7 +48,15 @@ int ACCalc::CalculateBMIFluidWeight(int weight, int height) {
 	}
 }
 
-int ACCalc::CalculateAlcoholLossOverTime(int startHour, int endHour, int gramsPerHour) {
+int ACCalc::CalculateAlcoholFillOverTime(int startHour, int endHour, double generalAlcoholCapacity) {
 	int timeDifference = endHour - startHour;
-	return gramsPerHour * timeDifference;
+	int quaterIntervals = (timeDifference * 60) / 15;
+	int alcoholCapacityPerQuater = generalAlcoholCapacity / 15;
+	int alcoholCapacityAfterTime = alcoholCapacityPerQuater * quaterIntervals;
+
+	if (alcoholCapacityAfterTime > generalAlcoholCapacity) {
+		alcoholCapacityAfterTime = generalAlcoholCapacity;
+	}
+
+	return generalAlcoholCapacity;
 }

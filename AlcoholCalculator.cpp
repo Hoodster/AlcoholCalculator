@@ -22,7 +22,6 @@ static TCHAR AlcoholTime[] = _T("Podaj czas spo¿ycia");
 
 struct model {
     bool sex;
-    int age;
     int weight;
     int height;
     int beer;
@@ -32,14 +31,15 @@ struct model {
     int endHour;
 } data;
 
+HWND firstWindow;
 HWND secondWindow;
 HWND thirdWindow;
 int _nCmdShow;
 
-Controls controls;
 MainWindow mainWindow;
 AlcoholTypesWindow alcoholTypes;
 ConsumptionTime consumptionTime;
+Controls controls;
 ACCalc ac;
 
 int CALLBACK WinMain(
@@ -56,7 +56,7 @@ int CALLBACK WinMain(
         return 0;
     }
 
-    HWND firstWindow = CreateNewWindow(MainWindowClass, hInstance, AppName);
+    firstWindow = CreateNewWindow(MainWindowClass, hInstance, AppName);
 
     if (!firstWindow) {
        return 1;
@@ -137,32 +137,6 @@ LRESULT CALLBACK WndProc(
 	LPARAM lParam
 ) {
     switch (message) {
-        case WM_COMMAND:
-            switch (wParam) {
-                case ID_CONFIRM1:
-                    ShowWindow(secondWindow, _nCmdShow);
-                    UpdateWindow(secondWindow);
-                    break;
-                case ID_CONFIRM2:
-                    ShowWindow(thirdWindow, _nCmdShow);
-                    UpdateWindow(thirdWindow);
-                    break;
-                case ID_CONFIRM3:
-                    double alcoholAmount = ac.CalculateAlcoholConcentration(
-                        data.sex,
-                        data.age,
-                        data.weight,
-                        data.height,
-                        data.beer,
-                        data.vodka,
-                        data.wine,
-                        data.startHour,
-                        data.endHour
-                    );
-                    break;
-                default:
-                    break;
-            }
         case WM_CLOSE:
             DestroyWindow(hWnd);
             break;
@@ -172,6 +146,42 @@ LRESULT CALLBACK WndProc(
         case WM_CTLCOLORSTATIC:
             SetBkMode((HDC)wParam, TRANSPARENT);
             return (LRESULT)GetStockObject(LTGRAY_BRUSH);
+            break;
+        case WM_COMMAND:
+            switch (wParam) {
+                case ID_CONFIRM1:
+                    data.sex = controls.GetOptionsFromRadioButtonGroup(hWnd, ID_SEXMALE, ID_SEXFEMALE);
+                    data.weight = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_WEIGHT));
+                    data.height = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_HEIGHT));
+                    ShowWindow(secondWindow, _nCmdShow);
+                    UpdateWindow(secondWindow);
+                    CloseWindow(firstWindow);
+                    break;
+                case ID_CONFIRM2:
+                    data.beer = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_BEER));
+                    data.vodka = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_VODKA));
+                    data.wine = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_WINE));
+                    ShowWindow(thirdWindow, _nCmdShow);
+                    UpdateWindow(thirdWindow);
+                    CloseWindow(secondWindow);
+                    break;
+                case ID_CONFIRM3:
+                    data.startHour = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_STARTDRINK));
+                    data.endHour = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_ENDDRINK));
+                    double alcoholAmount = ac.CalculateAlcoholConcentration(
+                        data.sex,
+                        data.weight,
+                        data.height,
+                        data.beer,
+                        data.vodka,
+                        data.wine,
+                        data.startHour,
+                        data.endHour
+                    );
+                    CloseWindow(thirdWindow);
+                    MessageBox(hWnd, NULL, NULL, NULL);
+                    break;
+            }
             break;
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);

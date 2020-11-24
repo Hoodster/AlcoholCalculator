@@ -1,8 +1,5 @@
 #include "ConsumptionTime.h"
-#include "Controls.h"
 #include <tchar.h>
-
-Controls controls;
 
 void ConsumptionTime::DefineConsumptionTimeWindowControls(HWND hWnd, HINSTANCE hInstance)
 {

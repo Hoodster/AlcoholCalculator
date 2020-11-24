@@ -3,8 +3,7 @@ class ACCalc
 {
 	public:
 		double CalculateAlcoholConcentration(
-			bool isMale, 
-			int age,
+			bool isMale,
 			int weight,
 			int height,
 			int beerAmount,
@@ -14,6 +13,6 @@ class ACCalc
 			int endHour);
 	private:
 		int CalculateBMIFluidWeight(int weight, int height);
-		int CalculateAlcoholLossOverTime(int startHour, int endHour, int gramsPerHour);
+		int CalculateAlcoholFillOverTime(int startHour, int endHour, double generalAlcoholCapacity);
 };
 

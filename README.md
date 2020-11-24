@@ -26,7 +26,7 @@ static TCHAR AlcoholMeasuresName[] = _T("Podaj ilość alkoholu");
 static TCHAR AlcoholTime[] = _T("Podaj czas spożycia"); // tytuły okna
 ```
 
-3. Stworzenie struktury modelu gdzie przypisowane są wartości
+3. Stworzenie struktury modelu gdzie przypisywane są wartości
 ```
     bool sex;
     int age;

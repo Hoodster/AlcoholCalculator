@@ -1,5 +1,13 @@
 # AlcoholCalculator
 
+# Uruchomienie
+Do uruchomienia potrzebne jest Visual Studio. Można pobrać za darmo community edition. Dodatkowo trzeba doinstalować narzędzia do budowy aplikacji desktopowych C++.
+![image](https://cis-linux2.temple.edu/~sallyk/cis1057/00_IDE/VSC_setup_files/Tutorial-Installing-C.png)
+
+Po uruchomieniu projektu wystarczy wcisnąć debugowanie (zielona strzałka) na górnej belce aplikacji.
+
+### Dosyć istotne. W folderze projektu usuń ukryty folder `.git`
+
 # Pliki
 - `AlcoholCalculator.cpp` - plik wykonywalny programu, zawiera definicje okien oraz zarządzanie ich stanem
 - `Controls.cpp/.h` - klasa do obsługi tworzenia kontrolek

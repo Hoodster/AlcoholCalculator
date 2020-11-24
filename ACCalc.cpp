@@ -30,7 +30,7 @@ double ACCalc::CalculateAlcoholConcentration(
 	}
 
 	int alcoholCapacityOverTime = CalculateAlcoholFillOverTime(startHour, endHour, generalAlcoholCapacity);
-	double bodyFluidsWeight = percentageOfBodyFluids * weight + BMIAdditionalWeight * 0.15;
+	double bodyFluidsWeight = (percentageOfBodyFluids * weight) + (BMIAdditionalWeight * 0.15);
 
 	return alcoholCapacityOverTime / bodyFluidsWeight;
 }
@@ -38,13 +38,16 @@ double ACCalc::CalculateAlcoholConcentration(
 int ACCalc::CalculateBMIFluidWeight(int weight, int height) {
 	double percentageOfBodyFluids;
 
-	double BMI = weight / (height / 100) ^ 2;
+	double BMI = weight / ((height / 100) ^ 2);
 
 	if (BMI < 18.5) {
 		return (int)(18.5 - BMI) * (height / 100) ^ 2;
 	}
 	else if (BMI > 25) {
 		return (int)(BMI - 25) * (height / 100) ^ 2;
+	}
+	else {
+		return 0;
 	}
 }
 
@@ -58,5 +61,5 @@ int ACCalc::CalculateAlcoholFillOverTime(int startHour, int endHour, double gene
 		alcoholCapacityAfterTime = generalAlcoholCapacity;
 	}
 
-	return generalAlcoholCapacity;
+	return alcoholCapacityAfterTime;
 }

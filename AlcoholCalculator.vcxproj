@@ -152,9 +152,18 @@
     <ClInclude Include="ConsumptionTime.h" />
     <ClInclude Include="Controls.h" />
     <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="images\beer.png" />
+    <Image Include="images\vodka.png" />
+    <Image Include="images\wine.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="AlcoholCalculator.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

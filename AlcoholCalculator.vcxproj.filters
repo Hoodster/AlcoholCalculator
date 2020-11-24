@@ -50,8 +50,27 @@
     <ClInclude Include="ConsumptionTime.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="images\beer.png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
+    <Image Include="images\vodka.png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
+    <Image Include="images\wine.png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="AlcoholCalculator.rc">
+      <Filter>Pliki zasobów</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

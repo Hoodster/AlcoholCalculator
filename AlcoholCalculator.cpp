@@ -7,6 +7,8 @@
 #include "MainWindow.h"
 #include "AlcoholTypesWindow.h"
 #include "ConsumptionTime.h"
+#include <cstring>
+#include <sstream>
 
 LRESULT CALLBACK WndProc(HWND hWsnd, UINT message, WPARAM wParam, LPARAM lParam);
 WNDCLASSEXW SetWindowOptions(HINSTANCE hInstance, LPCWSTR className);
@@ -138,10 +140,10 @@ LRESULT CALLBACK WndProc(
 ) {
     switch (message) {
         case WM_CLOSE:
-            DestroyWindow(hWnd);
+            PostQuitMessage(0);
             break;
         case WM_DESTROY:
-            PostQuitMessage(0);
+            DestroyWindow(hWnd);
             break;
         case WM_CTLCOLORSTATIC:
             SetBkMode((HDC)wParam, TRANSPARENT);
@@ -155,7 +157,7 @@ LRESULT CALLBACK WndProc(
                     data.height = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_HEIGHT));
                     ShowWindow(secondWindow, _nCmdShow);
                     UpdateWindow(secondWindow);
-                    CloseWindow(firstWindow);
+                    DestroyWindow(firstWindow);
                     break;
                 case ID_CONFIRM2:
                     data.beer = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_BEER));
@@ -163,7 +165,7 @@ LRESULT CALLBACK WndProc(
                     data.wine = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_WINE));
                     ShowWindow(thirdWindow, _nCmdShow);
                     UpdateWindow(thirdWindow);
-                    CloseWindow(secondWindow);
+                    DestroyWindow(secondWindow);
                     break;
                 case ID_CONFIRM3:
                     data.startHour = controls.GetNumberFromTextbox(GetDlgItem(hWnd, ID_STARTDRINK));
@@ -178,8 +180,16 @@ LRESULT CALLBACK WndProc(
                         data.startHour,
                         data.endHour
                     );
-                    CloseWindow(thirdWindow);
-                    MessageBox(hWnd, NULL, NULL, NULL);
+
+                    std::ostringstream messageText;
+                    messageText << "Posiadasz " << alcoholAmount << " promila alkoholu we krwi.";
+                    std::string messageTextString = messageText.str();
+                    std::wstring stemp = std::wstring(messageTextString.begin(), messageTextString.end());
+                    LPCWSTR result = stemp.c_str();
+                    int resultMessageBox = MessageBox(hWnd, result, _T("Wynik"), NULL);
+                    if (resultMessageBox) {
+                        PostQuitMessage(0);
+                    }
                     break;
             }
             break;
